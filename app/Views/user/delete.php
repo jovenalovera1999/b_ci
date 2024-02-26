@@ -2,6 +2,6 @@
 
 <?= $this->section('content') ?>
 
-<h1>This is add page</h1>
+<h1>This is delete page</h1>
 
 <?= $this->endSection('content') ?>

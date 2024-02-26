@@ -10,6 +10,6 @@ class UserController extends BaseController
     }
 
     public function addUser() {
-        return view('users/add');
+        return view('user/add');
     }
 }
