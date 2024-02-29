@@ -2,37 +2,49 @@
 
 <?= $this->section('content') ?>
 
+<!-- Navbar -->
+<?= $this->include('include/nav') ?>
 <div class="container">
-    <form action="#" method="post">
+    <form action="<?= base_url() ?>storeUser" method="post">
         <?= csrf_field() ?>
         <div class="card mt-3">
             <div class="card-body">
                 <h5 class="card-title">Add User</h5>
+                <!-- Alert message -->
+                <?= $this->include('include/message') ?>
                 <div class="mb-3">
                     <label for="first_name">First Name</label>
-                    <input type="text" class="form-control" id="first_name" name="first_name" />
+                    <input type="text" class="form-control" id="first_name" name="first_name" value="<?= set_value('first_name') ?>" />
                 </div>
                 <div class="mb-3">
                     <label for="middle_name">Middle Name</label>
-                    <input type="text" class="form-control" id="middle_name" name="middle_name" />
+                    <input type="text" class="form-control" id="middle_name" name="middle_name" value="<?= set_value('middle_name') ?>" />
                 </div>
                 <div class="mb-3">
                     <label for="last_name">Last Name</label>
-                    <input type="text" class="form-control" id="last_name" name="last_name" />
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="<?= set_value('last_name') ?>" />
                 </div>
                 <div class="mb-3">
                     <label for="age">Age</label>
-                    <input type="text" class="form-control" id="age" name="age" />
+                    <input type="text" class="form-control" id="age" name="age" value="<?= set_value('age') ?>" />
                 </div>
                 <div class="mb-3">
-                    <label for="age">Gender</label>
-                    <select class="form-select">
+                    <label for="gender_id">Gender</label>
+                    <select class="form-select" id="gender_id" name="gender_id">
                         <option value="" selected>N/A</option>
+                        <!-- Show genders from genders table in database -->
+                        <?php foreach ($genders as $gender) : ?>
+                            <option value="<?= $gender->gender_id ?>"><?= $gender->gender ?></option>
+                            <!-- If gender id has value -->
+                            <?php if (set_value('gender_id') == $gender->gender_id) : ?>
+                                <option value="<?= $gender->gender_id ?>" selected hidden><?= $gender->gender ?></option>
+                            <?php endif ?>
+                        <?php endforeach ?>
                     </select>
                 </div>
                 <div class="mb-3">
                     <label for="email">Email</label>
-                    <input type="text" class="form-control" id="email" name="email" />
+                    <input type="text" class="form-control" id="email" name="email" value="<?= set_value('email') ?>" />
                 </div>
                 <div class="mb-3">
                     <label for="password">Password</label>
