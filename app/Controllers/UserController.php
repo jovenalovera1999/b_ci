@@ -55,8 +55,8 @@ class UserController extends BaseController
                 $session = session();
                 $session->setflashdata('success_save_user', 'User successfully saved!');
 
-                // Go back to add user module after user saved
-                return redirect()->to('user/add');
+                // Return to list of users module after user saved
+                return redirect()->to('/');
             }
         }
 
@@ -65,7 +65,7 @@ class UserController extends BaseController
         $data['genders'] = $genderModel->findAll();
 
         // Return to add user module with genders value from genders table in database
-        return view('user/add', $data);
+        return view('/user/add', $data);
     }
 
     public function editUser($id) {
@@ -75,7 +75,7 @@ class UserController extends BaseController
         helper(['form']);
 
         // When button save clicked
-        if($this->request->getMethod() == 'post') {
+        if($this->request->getMethod() == 'put') {
             // Fetch all values from form
             $post = $this->request->getPost(['first_name', 'middle_name', 'last_name', 'age', 'gender_id', 'email', 'password']);
 
@@ -86,7 +86,7 @@ class UserController extends BaseController
                     'last_name' => ['label' => 'last name', 'rules' => 'required'],
                     'age' => ['label' => 'age', 'rules' => 'required|numeric'],
                     'gender_id' => ['label' => 'gender', 'rules' => 'required'],
-                    'email' => ['label' => 'email', 'rules' => 'required|valid_email|is_unique[users.email]']
+                    'email' => ['label' => 'email', 'rules' => 'required|valid_email|is_unique[users.email, user_id, ' . $id . ']']
                 ];
 
             // Check if there are invalid field. Otherwise, save user to users table in database
@@ -99,14 +99,14 @@ class UserController extends BaseController
 
                 // Call user model to save the user in users table in database
                 $userModel = new UserModel();
-                $userModel->save($post);
+                $userModel->update($id, $post);
 
                 // Create, set and show the success message after user saved
                 $session = session();
                 $session->setflashdata('success_save_user', 'User successfully updated!');
 
-                // Go back to edit user module after user saved
-                return redirect()->to('user/edit');
+                // Return to list of users module after user saved
+                return redirect()->to('/');
             }
         }
 
@@ -114,7 +114,11 @@ class UserController extends BaseController
         $genderModel = new GenderModel();
         $data['genders'] = $genderModel->findAll();
 
-        // Return to edit user module with genders value from genders table in database
+        // Call user model and fetch the selected user from users table in database
+        $userModel = new UserModel();
+        $data['user'] = $userModel->find($id);
+
+        // Return to edit user module with genders and user value from genders and users table in database
         return view('user/edit', $data);
     }
 }
